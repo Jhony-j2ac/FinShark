@@ -15,7 +15,8 @@ namespace api.Mappers
                 LastDiv = stock.LastDiv,
                 Purchase = stock.Purchase,
                 Industry = stock.Industry,
-                MarketCap = stock.MarketCap
+                MarketCap = stock.MarketCap,
+                Comments = stock.Comments.Select(x => x.FromCommentToDto()).ToList()
             };
         }
 
@@ -29,6 +30,19 @@ namespace api.Mappers
                 Purchase = createStock.Purchase,
                 Industry = createStock.Industry,
                 MarketCap = createStock.MarketCap
+            };
+        }
+
+        public static Stock ToStockFromUpdateDTO(this UpdateStock updateStock)
+        {
+            return new Stock()
+            {
+                Symbol = updateStock.Symbol,
+                CompanyName = updateStock.CompanyName,
+                LastDiv = updateStock.LastDiv,
+                Purchase = updateStock.Purchase,
+                Industry = updateStock.Industry,
+                MarketCap = updateStock.MarketCap
             };
         }
     }
