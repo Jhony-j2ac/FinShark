@@ -1,5 +1,6 @@
 ﻿using api.Data;
 using api.Dtos.Stock;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -34,9 +35,33 @@ namespace api.Repository
             return stockModel;
         }
 
-        public async Task<List<Stock>> GetAllAsync()
+        public async Task<List<Stock>> GetAllAsync(QueryObject queryObject)
         {
-            return await _context.Stocks.Include(x => x.Comments).ToListAsync();
+            var result = _context.Stocks.AsQueryable();
+
+            if(!string.IsNullOrWhiteSpace(queryObject.CompanyName))
+                result = result.Where(x => x.CompanyName == queryObject.CompanyName);
+
+            if(!string.IsNullOrWhiteSpace(queryObject.Symbol))
+                result = result.Where(x => x.Symbol== queryObject.Symbol);
+
+
+            var Listado = await result.Include(x => x.Comments).ToListAsync();
+            if (!string.IsNullOrWhiteSpace(queryObject.OrderBy)) { 
+                var prop = typeof(Stock).GetProperty(queryObject.OrderBy);
+                if (prop == null) throw new Exception("Campo orden invalido");
+                
+                if (!queryObject.IsDescending) {
+                    Listado = Listado.OrderBy(x => prop.GetValue(x)).ToList();
+                }
+                else
+                {
+                    Listado = Listado.OrderByDescending(x => prop.GetValue(x)).ToList();
+                }
+
+            }
+
+            return Listado;
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
