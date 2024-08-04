@@ -23,7 +23,7 @@ namespace api.Controllers
             _porfolioRepository = portfolioRepository;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetUserPorfolio()
         {
@@ -46,7 +46,7 @@ namespace api.Controllers
 
             var userPorfolio = await _porfolioRepository.GetUserPortfolios(appUser);
 
-            if(userPorfolio.Any(x => x.Symbol.ToLower() == symbol.ToLower()))
+            if (userPorfolio.Any(x => x.Symbol.ToLower() == symbol.ToLower()))
             {
                 return BadRequest("Cannot same stock to portfolio");
             }
@@ -59,12 +59,31 @@ namespace api.Controllers
 
             await _porfolioRepository.CreatePortfolio(portfolioModel);
 
-            if(portfolioModel == null)
+            if (portfolioModel == null)
             {
                 return StatusCode(500, "Could not create");
             }
-                    
+
             return Ok("Created");
+        }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> DeletePortfolio([FromBody] string symbol)
+        {
+            var userName = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(userName);
+
+            var portfolios = await _porfolioRepository.GetUserPortfolios(appUser);
+
+            var porfolio = portfolios?.Where(x => x.Symbol.ToLower() == symbol.ToLower()).ToList();
+
+            if (porfolio.Count != 1) return BadRequest("Porfolio cannot be deleted");
+
+            var portfolio = await _porfolioRepository.DeletePorfolio(appUser,  symbol);
+
+            if(porfolio == null) return BadRequest("Porfolio to delete not found");
+            return Ok(porfolio);
         }
 
     }
