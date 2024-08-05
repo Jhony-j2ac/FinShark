@@ -15,9 +15,10 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<Comment> AddAsync(int stockId, Comment comment)
+        public async Task<Comment> AddAsync(int stockId, string userId, Comment comment)
         {
             comment.StockId = stockId;
+            comment.AppUserId = userId;
             await _context.Comments.AddAsync(comment);
             await _context.SaveChangesAsync();
 
@@ -40,12 +41,12 @@ namespace api.Repository
 
         public async Task<List<Comment>> GetAllAsync()
         {
-            return await _context.Comments.ToListAsync();
+            return await _context.Comments.Include(x => x.AppUser).ToListAsync();
         }
 
         public async Task<Comment?> GetByIdAsync(int id)
         {
-            return await _context.Comments.FindAsync(id);
+            return await _context.Comments.Include(x => x.AppUser).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<bool> StockExists(int stockId)

@@ -2,7 +2,6 @@
 using api.Extensions;
 using api.Interfaces;
 using api.Models;
-using api.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
