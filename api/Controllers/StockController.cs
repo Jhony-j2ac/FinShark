@@ -30,6 +30,7 @@ namespace api.Controllers
 
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] int id) {
             var stocks = await _stockRepository.GetByIdAsync(id);
                 
@@ -42,6 +43,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create([FromBody] CreateStock stockDto)
         {
             var stockModel = stockDto.ToStockFromCreateDTO();

@@ -9,7 +9,7 @@ namespace api.Interfaces
         public Task<Comment?> UpdateAsync(int id, CommentUpdate comment);
         public Task<Comment?> DeleteAsync(int id);
         public Task<Comment?> GetByIdAsync(int id);
-        public Task<List<Comment>> GetAllAsync();
+        public Task<List<Comment>> GetAllAsync(Helpers.CommentQueryObject query);
         public Task<Boolean> StockExists(int stockId);
     }
 }

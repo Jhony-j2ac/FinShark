@@ -56,6 +56,9 @@ builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
+builder.Services.AddScoped<IFPMService, FPMService>();
+builder.Services.AddScoped<IStockRepository, StockRepository>();
+builder.Services.AddHttpClient<IFPMService, FPMService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -104,6 +107,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(options =>
+{
+    options.AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials()
+    //.WithOrigins("https://localhost:44351")
+    .SetIsOriginAllowed(origin => true);
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
