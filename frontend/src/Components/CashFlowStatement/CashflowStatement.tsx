@@ -4,7 +4,7 @@ import { data, useOutletContext } from 'react-router-dom';
 import { getChashFlow } from '../../api';
 import Table from '../Table/Table';
 import Spinner from '../Spinner/Spinner';
-import { formatLargeMonetaryNumber } from '../Helpers/NumberFormatting';
+import { formatLargeMonetaryNumber } from '../../Helpers/NumberFormatting';
 
 type Props = {}
 

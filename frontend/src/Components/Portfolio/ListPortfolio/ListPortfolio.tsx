@@ -1,9 +1,10 @@
 import React from 'react'
 import CardPortfolio from '../CardPortfolio/CardPortfolio'
 import {v4 as uuid} from 'uuid'
+import { PortfolioGet } from '../../../Models/Porfolio'
 
 interface Props {
-    PortfolioValues: string[],
+    PortfolioValues: PortfolioGet[],
     onPortfolioDelete: (e: any) => void
 }
 
@@ -19,7 +20,7 @@ const ListPortfolio : React.FC<Props> = ({PortfolioValues, onPortfolioDelete}: P
             PortfolioValues.map((portfolioValue) => {
               return (
                 <CardPortfolio
-                  porfolioName={portfolioValue}
+                  porfolioName={portfolioValue.companyName}
                   onPortfolioDelete={onPortfolioDelete}
                 />
               );

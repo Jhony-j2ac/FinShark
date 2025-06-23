@@ -5,7 +5,7 @@ import { getIncomeStatement } from '../../api';
 import RadioList from '../RadioList/RadioList';
 import Table from '../Table/Table';
 import Spinner from '../Spinner/Spinner';
-import { formatLargeMonetaryNumber, formatRatio } from '../Helpers/NumberFormatting';
+import { formatLargeMonetaryNumber, formatRatio } from '../../Helpers/NumberFormatting';
 
 type Props = {
 

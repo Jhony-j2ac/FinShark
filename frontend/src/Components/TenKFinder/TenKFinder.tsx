@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useId, useState } from 'react'
 import { CompanyTenK } from '../../company';
 import { getTenK } from '../../api';
 import TenkFinderItem from './TenkFinderItem/TenkFinderItem';
@@ -17,11 +17,12 @@ const TenKFinder = ({ticker}: Props) => {
         };
         getTenkData();
     }, []);
+    const idGen = useId();
   return (
     <div className='inline-flex rounded-md shadow-sm m-4'>
         {companyData? (
             companyData.slice(0, 5).map((tenK) => {
-                return <TenkFinderItem tenK={tenK} />
+                return <TenkFinderItem tenK={tenK} key={tenK.finalLink} />
             })
         ) : 
         (

@@ -22,9 +22,11 @@ namespace api.Mappers
             {
                 Title = comment.Title,
                 CreatedOn = comment.CreatedOn,
+                CreatedBy = comment.AppUser.UserName,
                 StockId = comment.StockId,
                 AppUser = comment.AppUser,
-                
+                Content = comment.Content,
+
             };
         }
 
