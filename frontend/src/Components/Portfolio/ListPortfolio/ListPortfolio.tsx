@@ -20,7 +20,7 @@ const ListPortfolio : React.FC<Props> = ({PortfolioValues, onPortfolioDelete}: P
             PortfolioValues.map((portfolioValue) => {
               return (
                 <CardPortfolio
-                  porfolioName={portfolioValue.companyName}
+                  porfolioName={portfolioValue!}
                   onPortfolioDelete={onPortfolioDelete}
                 />
               );

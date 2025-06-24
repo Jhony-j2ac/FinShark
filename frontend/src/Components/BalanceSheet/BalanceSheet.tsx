@@ -86,7 +86,7 @@ const BalanceSheet = (props: Props) => {
             setBalancesheet(data!.data[0]);
         }
         GetBalanceSheet();
-    }, [ticker]);
+    }, []);
   return (
     balanceSheet ? (
         <RadioList data={balanceSheet} config={config} />

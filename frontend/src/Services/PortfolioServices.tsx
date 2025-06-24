@@ -2,11 +2,13 @@ import axios from "axios";
 import { ErrorHandler } from "../Helpers/ErrorHandler"
 import { PortfolioGet, PortfolioPost } from "../Models/Porfolio";
 
-const api = "https://localhost:44351/api/portfolio/"
+const api = "https://localhost:44351/api/Portfolio"
 
 export const portfolioAddAPI = async (symbol: string) => {
     try {
-        const data = await axios.post<PortfolioPost>(api + symbol, {   
+        const data = await axios.post<PortfolioPost>(api + "/"+ symbol, {
+            //symbol: symbol
+          },{ 
             params: {
                 symbol: symbol
             }
@@ -19,7 +21,7 @@ export const portfolioAddAPI = async (symbol: string) => {
 
 export const portfolioDeleteAPI = async (symbol: string) => {
     try {
-        const data = await axios.delete<PortfolioPost>(api + symbol, {   
+        const data = await axios.delete<PortfolioPost>(api + "/"+ symbol, {   
             params: {
                 symbol: symbol
             }
@@ -32,7 +34,7 @@ export const portfolioDeleteAPI = async (symbol: string) => {
 
 export const portfolioGetAPI = async () => {
     try {
-        const data = await axios.delete<PortfolioGet[]>(api);
+        const data = await axios.get<PortfolioGet[]>(api);
         return data;
     }catch (e) {
         ErrorHandler(e);

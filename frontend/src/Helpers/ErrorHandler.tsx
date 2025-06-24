@@ -19,7 +19,7 @@ export const ErrorHandler = (error: any) => {
                 toast.warning("Please login");
                 window.history.pushState({}, "LoginPage", "/login");
             }else if(err){
-                toast.warning(err?.data);
+                toast.warning(error?.message);
             }
         }else {
             toast.warning(error.message);

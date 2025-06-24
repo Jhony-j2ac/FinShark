@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    [Route("api/Porfolio")]
+    [Route("api/Portfolio")]
     [ApiController]
-    public class PortfolioController : ControllerBase    {
+    public class PortfolioController : ControllerBase {
         private readonly UserManager<AppUser> _userManager;
         private readonly IStockRepository _stockRepository;
         private readonly IPortfolioRepository _porfolioRepository;
@@ -39,7 +39,8 @@ namespace api.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddPortfolio([FromBody] string symbol)
+        [Route("{symbol:alpha}")]
+        public async Task<IActionResult> AddPortfolio([FromRoute] string symbol)
         {
             var userName = User.GetUserName();
             var appUser = await _userManager.FindByNameAsync(userName);
@@ -82,7 +83,8 @@ namespace api.Controllers
 
         [HttpDelete]
         [Authorize]
-        public async Task<IActionResult> DeletePortfolio([FromBody] string symbol)
+        [Route("{symbol:alpha}")]
+        public async Task<IActionResult> DeletePortfolio([FromRoute] string symbol)
         {
             var userName = User.GetUserName();
             var appUser = await _userManager.FindByNameAsync(userName);
@@ -95,8 +97,8 @@ namespace api.Controllers
 
             var portfolio = await _porfolioRepository.DeletePorfolio(appUser,  symbol);
 
-            if(porfolio == null) return BadRequest("Porfolio to delete not found");
-            return Ok(porfolio);
+            if(portfolio == null) return BadRequest("Porfolio to delete not found");
+            return Ok(portfolio);
         }
 
     }

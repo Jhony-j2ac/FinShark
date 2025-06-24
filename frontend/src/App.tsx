@@ -3,7 +3,7 @@ import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './Components/Navbar/Navbar';
 import { ToastContainer } from 'react-toastify';
-import { UserProvider } from './Context/useAuth';
+import { UserProvider } from './Context/useAuthCookie';
 
 function App() {
   return (

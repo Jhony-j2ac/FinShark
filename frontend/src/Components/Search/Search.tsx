@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from 'react'
+import React, { SyntheticEvent } from 'react'
 
 interface Props {
   onSearchSubmit: (e : SyntheticEvent) => void,

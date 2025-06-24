@@ -19,7 +19,7 @@ const SearchPage : React.FC = (props: Props) : JSX.Element => {
   const [search, setSearch] = useState<string>("");
   const [searchResult, setSearchResult] = useState<CompanySearch[]>([]);
   const [serverError, setServerError] = useState<string>("");
-  const [portfolioValue, setPortfolioValue] = useState<PortfolioGet[] | null>([]);
+  const [portfolioValues, setPortfolioValues] = useState<PortfolioGet[] | null>([]);
 
     useEffect(() => {
         getPortfolio();
@@ -38,7 +38,7 @@ const SearchPage : React.FC = (props: Props) : JSX.Element => {
   const getPortfolio  = () => {
     portfolioGetAPI().then((res) => {
         if(res?.data){
-            setPortfolioValue(res.data);
+            setPortfolioValues(res.data);
         }
     }).catch((err) => {
         toast.warning("Could not get portfolio values");
@@ -60,7 +60,7 @@ const SearchPage : React.FC = (props: Props) : JSX.Element => {
      e.preventDefault();
      const value = e.target[0].value;
      portfolioAddAPI(value).then((res) => {
-        if(res?.status === 204){
+        if(res?.status === 204 || res?.status === 200){
             toast.success("Added to portfolio successfully");
             getPortfolio();
         }
@@ -84,7 +84,7 @@ const SearchPage : React.FC = (props: Props) : JSX.Element => {
   return (
     <>
       <Search onSearchSubmit={onSearchSubmit} handleSearchChange={handleSearchChange} search={search} ></Search>
-      <ListPortfolio PortfolioValues={portfolioValue!} onPortfolioDelete={onPortfolioDelete}></ListPortfolio>
+      <ListPortfolio PortfolioValues={portfolioValues!} onPortfolioDelete={onPortfolioDelete}></ListPortfolio>
       {serverError && <h1>{serverError}</h1>}
       <CardList searchResult={searchResult} onPortfolioCreate={onPortfolioCreate}></CardList>
     </>

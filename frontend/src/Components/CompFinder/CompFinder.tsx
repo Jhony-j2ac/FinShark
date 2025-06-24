@@ -15,7 +15,7 @@ const CompFinder = ({ticker}: Props) => {
             setCompanyData(data?.data[0])
         };
         getComps();
-    }, [ticker]);
+    }, []);
   return (
     <div className='inline-flex  rounded medium shadow-sm m-4'>
         {companyData?.peersList.map( (ticker) => {

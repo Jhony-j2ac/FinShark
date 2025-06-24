@@ -2,7 +2,7 @@ import React from "react";
 import logo from "./logo.png";
 import "./Navbar.css";
 import { Link } from "react-router";
-import { useAuth } from "../../Context/useAuth";
+import { useAuthCookie as useAuth } from "../../Context/useAuthCookie";
 
 interface Props {}
 
@@ -24,12 +24,12 @@ const Navbar = (props: Props) => {
         { isLoggedIn() ? (
             <div className="hidden lg:flex items-center space-x-6 text-back">
                 <div className="hover:text-darkBlue">Welcome {user?.userName}</div>
-                <a
+                <button
                     onClick={logoutUser}
                     className="px-8 py-3 font-bold rounded text-white bg-lightGreen hover:opacity-70"
                 >
                     SignOut
-                </a>
+                </button>
             </div>
         ) :  (
             <div className="hidden lg:flex items-center space-x-6 text-back">
