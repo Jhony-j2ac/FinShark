@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAuthCookie as useAuth } from '../../Context/useAuthCookie';
+import { useAuthHttp as useAuth } from '../../Context/useAuthHttp';
 import { useForm } from 'react-hook-form';
 type props = {
 

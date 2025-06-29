@@ -11,7 +11,7 @@ const StockCommentList = ({comments}: Props) => {
   return (
     comments?.length > 0 ? (
       <>
-        {comments.map((comment) => (<StockCommentListItem comment={comment} />))};
+        {comments.map((comment) => (<StockCommentListItem comment={comment} />))}
       </>
     ) : (<Spinner />)
   )

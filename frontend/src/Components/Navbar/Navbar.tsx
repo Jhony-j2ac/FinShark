@@ -2,7 +2,7 @@ import React from "react";
 import logo from "./logo.png";
 import "./Navbar.css";
 import { Link } from "react-router";
-import { useAuthCookie as useAuth } from "../../Context/useAuthCookie";
+import { useAuthHttp as useAuth } from "../../Context/useAuthHttp";
 
 interface Props {}
 

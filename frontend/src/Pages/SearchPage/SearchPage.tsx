@@ -6,8 +6,9 @@ import Search from '../../Components/Search/Search';
 import ListPortfolio from '../../Components/Portfolio/ListPortfolio/ListPortfolio';
 import CardList from '../../Components/CardList/CardList';
 import { PortfolioGet } from '../../Models/Porfolio';
-import { portfolioAddAPI, portfolioDeleteAPI, portfolioGetAPI } from '../../Services/PortfolioServices';
+// Adjust the import path to match the actual file location and casing
 import { toast } from 'react-toastify';
+import { usePortfolioService } from '../../Services/PortfolioServices';
 
 
 
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const SearchPage : React.FC = (props: Props) : JSX.Element => {
+  const { portfolioAddAPI, portfolioDeleteAPI, portfolioGetAPI } = usePortfolioService();
   const [search, setSearch] = useState<string>("");
   const [searchResult, setSearchResult] = useState<CompanySearch[]>([]);
   const [serverError, setServerError] = useState<string>("");
@@ -36,11 +38,11 @@ const SearchPage : React.FC = (props: Props) : JSX.Element => {
   }
 
   const getPortfolio  = () => {
-    portfolioGetAPI().then((res) => {
+    portfolioGetAPI().then((res : any) => {
         if(res?.data){
             setPortfolioValues(res.data);
         }
-    }).catch((err) => {
+    }).catch((err : any) => {
         toast.warning("Could not get portfolio values");
     });
   }
@@ -59,12 +61,12 @@ const SearchPage : React.FC = (props: Props) : JSX.Element => {
   const onPortfolioCreate = (e: any) => {
      e.preventDefault();
      const value = e.target[0].value;
-     portfolioAddAPI(value).then((res) => {
+     portfolioAddAPI(value).then((res : any) => {
         if(res?.status === 204 || res?.status === 200){
             toast.success("Added to portfolio successfully");
             getPortfolio();
         }
-     }).catch((err) => {
+     }).catch((err : any) => {
         toast.warning("Could not create portfolio ");
     });
   }
@@ -77,7 +79,7 @@ const SearchPage : React.FC = (props: Props) : JSX.Element => {
             toast.success("Deleted portfolio successfully");
             getPortfolio();
         }
-     }).catch((err) => {
+     }).catch((err : any) => {
         toast.warning("Could not create portfolio ");
     });
   }

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import StockCommentForm from './StockCommentForm/StockCommentForm';
-import { commentGetAPI, commentPostAPI } from '../../Services/CommentService';
+import { useCommentService } from '../../Services/CommentService';
 import { toast } from 'react-toastify';
 import { CommentGet } from '../../Models/Comment';
 import { set } from 'react-hook-form';
@@ -15,7 +15,7 @@ type Props = {
 
 
 const StockComment = ({stockSymbol}: Props) => {
-
+    const {commentGetAPI, commentPostAPI} = useCommentService();
     const [comments, setComments] = React.useState<CommentGet[] | null>([]);
     const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -25,14 +25,14 @@ const StockComment = ({stockSymbol}: Props) => {
 
     const handleComment = (e : CommentFormInputs) => {
         commentPostAPI(e.title, e.content, stockSymbol)
-        .then( (res) => {
+        .then( (res : any) => {
             if(typeof res !== "undefined") {
                 toast.success("Comment posted successfully");
                 getComments();
             }else{
                 toast.error("Failed to post comment");
             }
-        }).catch( (err) => {
+        }).catch( (err : any) => {
             toast.error("An error occurred while posting the comment");
         });
     }

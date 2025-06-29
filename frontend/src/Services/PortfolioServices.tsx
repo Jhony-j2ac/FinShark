@@ -1,42 +1,45 @@
-import axios from "axios";
-import { ErrorHandler } from "../Helpers/ErrorHandler"
+import { useAuthHttp } from "../Context/useAuthHttp";
+import { ErrorHandler } from "../Helpers/ErrorHandler";
 import { PortfolioGet, PortfolioPost } from "../Models/Porfolio";
 
-const api = "https://localhost:44351/api/Portfolio"
+const api = "https://localhost:44351/api/Portfolio";
 
-export const portfolioAddAPI = async (symbol: string) => {
-    try {
-        const data = await axios.post<PortfolioPost>(api + "/"+ symbol, {
-            //symbol: symbol
-          },{ 
-            params: {
-                symbol: symbol
-            }
-        });
-        return data;
-    }catch (e) {
-        ErrorHandler(e);
-    }
-}
+export const usePortfolioService = () => {
+    const { authAxios } = useAuthHttp();
 
-export const portfolioDeleteAPI = async (symbol: string) => {
-    try {
-        const data = await axios.delete<PortfolioPost>(api + "/"+ symbol, {   
-            params: {
-                symbol: symbol
-            }
-        });
-        return data;
-    }catch (e) {
-        ErrorHandler(e);
-    }
-}
+    const portfolioAddAPI = async (symbol: string) => {
+        try {
+            const data = await authAxios.post<PortfolioPost>(api + "/" + symbol, {}, {
+                params: { symbol },
+                withCredentials: true
+            });
+            return data;
+        } catch (e) {
+            ErrorHandler(e);
+        }
+    };
 
-export const portfolioGetAPI = async () => {
-    try {
-        const data = await axios.get<PortfolioGet[]>(api);
-        return data;
-    }catch (e) {
-        ErrorHandler(e);
-    }
-}
+    const portfolioDeleteAPI = async (symbol: string) => {
+        try {
+            const data = await authAxios.delete<PortfolioPost>(api + "/" + symbol, {
+                withCredentials: true
+            });
+            return data;
+        } catch (e) {
+            ErrorHandler(e);
+        }
+    };
+
+    const portfolioGetAPI = async () => {
+        try {
+            const data = await authAxios.get<PortfolioGet[]>(api, {
+                withCredentials: true
+            });
+            return data;
+        } catch (e) {
+            ErrorHandler(e);
+        }
+    };
+
+    return { portfolioAddAPI, portfolioDeleteAPI, portfolioGetAPI };
+};

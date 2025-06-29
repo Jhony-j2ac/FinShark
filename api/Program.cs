@@ -14,6 +14,8 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+/* SECTION TO CONFIGURE SWAGGER BEGIN */
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -23,7 +25,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-/// Seccion para a swagger añadir funciones de autenticaciòn bearer
+/// Seccion para a swagger anadir funciones de autenticacion bearer
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -51,7 +53,10 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+/* SECTION TO CONFIGURE SWAGGER END*/
 
+
+/* SECTION FOR REPOSITORY PATTERN */
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -60,11 +65,13 @@ builder.Services.AddScoped<IFPMService, FPMService>();
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddHttpClient<IFPMService, FPMService>();
 
+/* SECTION FOR DB CLIENT CONFIG */
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+/* SECTION FOR DB jwt CONFIG BEGIN */
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
@@ -83,6 +90,21 @@ builder.Services.AddAuthentication(options =>
     options.DefaultSignOutScheme =
     options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options => {
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            // If token is not in header, check HttpOnly cookie
+            if (string.IsNullOrEmpty(context.Token) &&
+                context.Request.Cookies.ContainsKey("token"))
+            {
+                context.Token = context.Request.Cookies["token"];
+            }
+
+            return Task.CompletedTask;
+        }
+    };
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -96,30 +118,52 @@ builder.Services.AddAuthentication(options =>
     };
 
 });
+/* SECTION FOR DB jwt CONFIG END */
+// como es un hibrido de cookckie y jwt, hay que configurar el cookie de autenticacion para evitar redirecciones
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Events.OnRedirectToLogin = context =>
+    {
+        // Si es una peticiÃ³n API, responde 401 en vez de redirigir
+        if (context.Request.Path.StartsWithSegments("/api"))
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.CompletedTask;
+        }
+        context.Response.Redirect(context.RedirectUri);
+        return Task.CompletedTask;
+    };
+});
 
+// post build
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// finish swagger config
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
 
+// finish jwt config
 app.UseCors(options =>
 {
-    options.AllowAnyMethod()
+    options
+    //.WithOrigins("http://localhost:3000")
+    .SetIsOriginAllowed(origin => true)
+    .AllowAnyMethod()
     .AllowAnyHeader()
-    .AllowCredentials()
-    //.WithOrigins("https://localhost:44351")
-    .SetIsOriginAllowed(origin => true);
+    .AllowCredentials();
 });
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+//finish api normal configs
 app.MapControllers();
 
 app.Run();
